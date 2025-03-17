@@ -1,4 +1,4 @@
-@mui/material @emotion/react @emotion/styled
+
 smolagents
 dotenv
 os
@@ -6,4 +6,3 @@ flask
 flask_cors
 requests
 bootstrap
-vite
