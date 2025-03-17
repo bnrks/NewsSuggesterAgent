@@ -1,0 +1,7 @@
+
+smolagents
+dotenv
+os
+flask
+flask_cors
+requests
