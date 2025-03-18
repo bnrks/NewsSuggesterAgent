@@ -27,13 +27,20 @@ def get_news():
 
        
         news_query = f"""
-            bring me news about {query} type of  {newstype} news. the date should be from {fromdate} to {todate}, sorted by {sortby}.
+            bring me news about query: {query} category:{category} type of  {newstype} news. the date should be from {fromdate} to {todate}, sorted by {sortby}.
             Sources: {', '.join(sources)}. If some parameters are empty, just ignore them.
             Summarize them briefly and create a headline for each one.News summaries should be 75 words
             maximum number of news you can select 12.
             Use the tools I gave you to do this. I want the output format as follows:
-            {{Headline: <headline> Summary: <summary> Link: <link> Date: <date> Source: <source> urlToImg: <urlToImg>}}
-            If you give me any output other than this, I will find you and kill you.
+            {{
+                Headline: String,     // HEADLINE OF THE NEW
+                Summary: String,      // SUMMARY OF THE NEW
+                urlToImg: String,     // URL OF THE IMAGE OF THE NEW
+                Link: String,         // URL OF THE NEW
+                Source: String        // SOURCE OF THE NEW
+                }}
+            THIS IS FOR ONE PIECE OF NEWS. YOU WILL SEND 12 OF THESE. NEVER, NEVER SEND IN ANY OTHER FORMAT THAN THIS FORMAT.
+            COMPLETE THE PROCESS IN MAXIMUM 7 STEPS.
             """
 
         result = agent.run(news_query)

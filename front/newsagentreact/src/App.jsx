@@ -14,6 +14,8 @@ import ListItemText from "@mui/material/ListItemText";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Skeleton from "@mui/material/Skeleton";
 import logo from "../src/assets/logo-transparent.png";
+import Grid from "@mui/material/Grid";
+
 function App() {
   const [newstype, setNewsType] = useState("");
   const [query, setQuery] = useState("");
@@ -22,7 +24,7 @@ function App() {
   const [fromdate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [sortby, setSortBy] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState({});
   const [error, setError] = useState("");
   const [showNews, setShowNews] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -38,43 +40,44 @@ function App() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true); // Yükleme başlatıldı
     const data = {
-      newstype: newstype,
-      query: query,
-      source: source,
-      category: category,
-      fromdate: fromdate,
-      toDate: toDate,
-      sortby: sortby,
+      newstype,
+      query,
+      source,
+      category,
+      fromdate,
+      toDate,
+      sortby,
     };
 
     try {
       const res = await fetch("http://localhost:5000/get-news", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      setShowNews(true);
-      const result = await res.json();
-      setLoading(true);
+
+      const news = await res.json();
 
       if (res.ok) {
-        setResult(result.data);
-        console.log(result.data);
+        setShowNews(true);
+        console.log(news.data);
+        setResult(news.data);
+        console.log(result);
         setError("");
       } else {
         setResult("");
-        setError(result.error || "Bilinmeyen hata");
+        setError(news.error || "Bilinmeyen hata");
       }
     } catch (error) {
       setError("Bir hata oluştu!");
       setResult("");
       console.error(error);
+    } finally {
+      setLoading(false); // Yükleme tamamlandı
     }
   };
-
   return (
     <>
       <div className="fixed top-0 left-0 ">
@@ -201,7 +204,7 @@ function App() {
         </div>
       </div>
       <hr />
-      <div className="div">
+      {/* <div className="div">
         {showNews ? (
           loading ? (
             <div className="">
@@ -362,7 +365,159 @@ function App() {
         ) : (
           <div></div>
         )}
-      </div>
+      </div> */}
+      {loading ? (
+        <div className="">
+          <div className="row my-4">
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+            <div className="col-4">
+              <Card sx={{ maxWidth: 700 }}>
+                <Skeleton variant="rectangular" width={700} height={240} />
+                <CardContent>
+                  <Skeleton />
+                  <Skeleton height={120} />
+                </CardContent>
+                <CardActions
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Skeleton width="20%" />
+                  <Skeleton width="20%" />
+                </CardActions>
+              </Card>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          {showNews && result?.length > 0 ? (
+            <Grid container spacing={2}>
+              {result.map((news, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Card sx={{ maxWidth: 600 }}>
+                    <CardMedia
+                      sx={{ height: 250 }}
+                      image={news.urlToImg}
+                      title={news.Headline}
+                    />
+                    <CardContent>
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="div"
+                        className="text-start"
+                      >
+                        {news.Headline}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
+                        className="text-start"
+                      >
+                        {news.Summary}
+                      </Typography>
+                    </CardContent>
+                    <CardActions
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Button size="small" href={news.Link}>
+                        Learn More
+                      </Button>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary", ml: "auto" }}
+                        className="pe-2 pb-2"
+                      >
+                        Source: {news.Source}
+                      </Typography>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <div>No news available</div>
+          )}
+        </div>
+      )}
     </>
   );
 }
